@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+  ci4:
+    image: multideskio/ci4:php-8.2
+    networks:
+      - network_ci4
+    environment:
+      - CI4_GIT_REPO=
+      - CI_ENVIRONMENT=
+      - MIGRATIONS=
+      - app_baseURL=
+      - database_default_hostname=
+      - database_default_database=
+      - database_default_username=
+      - database_default_password=
+      - database_default_DBDriver=
+      - database_default_DBPrefix=
+      - database_default_port=
+      - session_driver=
+      - session_cookieName=
+      - session_expiration=
+      - session_savePath=
+      - session_matchIP=
+      - session_timeToUpdate=
+      - session_regenerateDestroy=
+      - logger.threshold=4
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1024M
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.ci4.rule=Host(`SEU DOMINIO`)
+        - traefik.http.routers.ci4.entrypoints=websecure
+        - traefik.http.routers.ci4.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.ci4.service=ci4
+        - traefik.http.services.ci4.loadbalancer.server.port=80
+        - traefik.http.services.ci4.loadbalancer.passHostHeader=true
+
+networks:
+  network_ci4:
+    external: true

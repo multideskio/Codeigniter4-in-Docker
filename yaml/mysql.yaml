@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  mysql_ci4:
+    image: mysql:5.7
+    networks:
+      - network_ci4
+    volumes: 
+      - mysql_data_ci4:/var/lib/mysql
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    environment:
+      MYSQL_ROOT_PASSWORD: "senhaSuperSecreta"
+      MYSQL_DATABASE: "ci4db"
+      MYSQL_USER: "ci4dbuser"
+      MYSQL_PASSWORD: "senhaSuperSecreta"
+
+networks:
+  network_ci4:
+    external: true
+
+volumes:
+  mysql_data_ci4:
+    labels:
+      description: "Volume for MySQL data"
