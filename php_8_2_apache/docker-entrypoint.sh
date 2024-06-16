@@ -32,6 +32,7 @@ if [ -n "${MIGRATIONS}" ]; then
     # Dar permissões de escrita ao diretório "writable"
     echo "Dando permissões de escrita ao diretório /var/www/html/writable..."
     chown -R www-data:www-data /var/www/html/writable
+    chown -R www-data:www-data /var/www/html/public/assets
 else
     echo "Instalação PHP comum, mas é preciso ter uma instalação de app com a pasta public..."
     echo "Dando permissões de escrita ao diretório /var/www/html"
