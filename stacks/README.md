@@ -1,1 +1,0 @@
-# Ao utilizar este arquivo, não se esqueça de configurar as variáveis e o seu dominio no traefik
