@@ -18,6 +18,8 @@ services:
       MYSQL_DATABASE: "ci4db"
       MYSQL_USER: "ci4dbuser"
       MYSQL_PASSWORD: "senhaSuperSecreta"
+    ports:
+      - "3307:3306"
 
 networks:
   network_ci4:

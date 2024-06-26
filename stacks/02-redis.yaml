@@ -3,7 +3,7 @@ version: "3.7"
 services:
   redis_ci4:
     image: redis:6.2
-    command: ["redis-server", "--appendonly", "yes", "--port", "6379"]
+    command:  ["redis-server", "--appendonly", "yes", "--port", "6379", "--bind", "0.0.0.0"]
     volumes:
       - redis_data_ci4:/data
     networks:
@@ -16,6 +16,8 @@ services:
         limits:
           cpus: "0.5"
           memory: 512M
+    ports:
+      - "6380:6379"
 
 networks:
   network_ci4:

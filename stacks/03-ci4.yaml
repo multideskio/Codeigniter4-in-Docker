@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  vinha:
+    image: multideskio/ci4:php-8.2
+    ports:
+      - "80:80"
+    networks:
+      - network_ci4
+    environment:
+      - CI4_GIT_REPO="SEU GIT"
+      
+      - CI_ENVIRONMENT=development
+      - MIGRATIONS=true
+      - app_baseURL=https://DOMINIO-COMPLETO
+      
+      #BANCO DE DADOS
+      - database_default_hostname=
+      - database_default_database=
+      - database_default_username=
+      - database_default_password=
+      - database_default_DBDriver=
+      - database_default_DBPrefix=
+      - database_default_port=3306
+      
+      #SESSION COM REDIS
+      - session_driver=CodeIgniter\Session\Handlers\RedisHandler
+      - session_cookieName=ci_sessions
+      - session_expiration=7200
+      - session_savePath=tcp://redis_ci4:6379
+      - session_matchIP=false
+      - session_timeToUpdate=300
+      - session_regenerateDestroy=false
+      
+      #LOGS
+      - logger.threshold=4
+
+networks:
+  network_ci4:
+    external: true

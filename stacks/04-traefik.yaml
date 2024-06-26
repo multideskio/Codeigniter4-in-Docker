@@ -26,15 +26,6 @@ services:
       - session_regenerateDestroy=
       - logger.threshold=4
     deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 1024M
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
       labels:
         - traefik.enable=true
         - traefik.http.routers.ci4.rule=Host(`SEU DOMINIO`)
