@@ -1,0 +1,1 @@
+### PHP 8.2 APACHE
