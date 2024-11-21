@@ -6,50 +6,49 @@ echo "Iniciando o script de configuração do contêiner..."
 # ----------------------------------------------------------------------
 # Clonagem do repositório
 # ----------------------------------------------------------------------
-if [ -n "${CI4_GIT_REPO}" ]; then
-    echo "Clonando repositório Git a partir de ${CI4_GIT_REPO}..."
+clone_repository() {
+    local repo_url=$1
+    local target_dir=$2
+
+    echo "Clonando repositório Git a partir de ${repo_url}..."
 
     # Verificar se GIT_USER e GIT_TOKEN foram configurados para repositórios privados
     if [ -n "${GIT_USER}" ] && [ -n "${GIT_TOKEN}" ]; then
         echo "Usando autenticação com token para repositório privado..."
-        git clone https://${GIT_USER}:${GIT_TOKEN}@${CI4_GIT_REPO} /var/www/html || {
+        git clone https://${GIT_USER}:${GIT_TOKEN}@${repo_url} ${target_dir} || {
             echo "Falha ao clonar o repositório privado. Verifique suas credenciais."
             exit 1
         }
     else
         echo "Clonando repositório público..."
-        git clone "${CI4_GIT_REPO}" /var/www/html || {
+        git clone "${repo_url}" ${target_dir} || {
             echo "Falha ao clonar o repositório público."
             exit 1
         }
     fi
 
     # Remover arquivo .env existente no repositório
-    rm -f /var/www/html/.env || true
+    rm -f ${target_dir}/.env || true
+}
+
+if [ -n "${CI4_GIT_REPO}" ]; then
+    clone_repository "${CI4_GIT_REPO}" "/var/www/html"
 else
     echo "A variável CI4_GIT_REPO não está definida. Usando o valor padrão."
-    git clone https://github.com/codeigniter4/CodeIgniter4.git /var/www/html || {
-        echo "Falha ao clonar o repositório padrão."
-        exit 1
-    }
-    rm -f /var/www/html/.env || true
+    clone_repository "https://github.com/codeigniter4/CodeIgniter4.git" "/var/www/html"
 fi
 
 # ----------------------------------------------------------------------
 # Instalação de dependências com Composer
 # ----------------------------------------------------------------------
 echo "Executando composer install..."
-if [ -n "${CI_ENVIRONMENT}" ] && [ "${CI_ENVIRONMENT}" == "production" ]; then
-    composer install --working-dir=/var/www/html --no-dev || {
-        echo "Falha ao executar o Composer no modo produção."
-        exit 1
-    }
-else
-    composer install --working-dir=/var/www/html || {
-        echo "Falha ao executar o Composer no modo de desenvolvimento."
-        exit 1
-    }
-fi
+COMPOSER_OPTIONS="--working-dir=/var/www/html"
+[ -n "${CI_ENVIRONMENT}" ] && [ "${CI_ENVIRONMENT}" == "production" ] && COMPOSER_OPTIONS+=" --no-dev"
+
+composer install ${COMPOSER_OPTIONS} || {
+    echo "Falha ao executar o Composer."
+    exit 1
+}
 
 # ----------------------------------------------------------------------
 # Configuração do arquivo .env
