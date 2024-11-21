@@ -22,8 +22,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php -r "unlink('composer-setup.php');"
 
 # Configurar e instalar a extensão GD com suporte a freetype, jpeg e webp
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install gd
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
+    docker-php-ext-install gd
 
 # Instalar outras extensões PHP
 RUN docker-php-ext-install intl pdo_mysql zip mysqli
